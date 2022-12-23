@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+    ml-mysql:
+        container_name: ml-mysql
+        platform: linux/x86_64
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+            - "3306:3306"
+        network_mode: bridge
+        volumes:
+            - ./storage/mysql:/var/lib/mysql
+    ml-phpmyadmin:
+        container_name: ml-phpmyadmin
+        image: phpmyadmin
+        ports:
+            - "3305:80"
+        restart: always
+        links:
+            - "ml-mysql"
+        network_mode: bridge
+        environment:
+            PMA_HOST: ml-mysql
+            PMA_PASSWORD: ""
+        depends_on:
+            - ml-mysql
+volumes:
+    src:
