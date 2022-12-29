@@ -11,7 +11,7 @@ services:
             - "3306:3306"
         network_mode: bridge
         volumes:
-            - ./storage/mysql:/var/lib/mysql
+            - mysql-data:/var/lib/mysql
     ml-phpmyadmin:
         container_name: ml-phpmyadmin
         image: phpmyadmin
@@ -19,12 +19,14 @@ services:
             - "3305:80"
         restart: always
         links:
-            - "ml-mysql"
+            - ml-mysql
+        depends_on:
+            - ml-mysql
         network_mode: bridge
         environment:
             PMA_HOST: ml-mysql
+            PMA_PORT: 3306
+            PMA_USER: "root"
             PMA_PASSWORD: ""
-        depends_on:
-            - ml-mysql
 volumes:
-    src:
+  mysql-data:
